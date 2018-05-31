@@ -12,6 +12,7 @@ public class Author {
 	String country;
 	@ManyToMany (mappedBy="authors")
 	List <Book> books;
+	
 	public Author(String name, String country, List<Book> books) {
 		this.name = name;
 		this.country = country;

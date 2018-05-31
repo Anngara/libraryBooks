@@ -10,17 +10,21 @@ public class Book {
 	@Id
 	long isbm;
 	int amount;
+	int amountActual;
 	String titel;
 	@Enumerated (EnumType.STRING)
 	Cover cover;
 	int pickPeriod;
-	@ManyToMany
+	@ManyToMany 
 	List <Author> authors;
+	@OneToMany
+	List <Record> records;
 	
 	
 	public Book(long isbm, int amount, String titel, Cover cover, int pickPeriod, List<Author> authors) {
 		this.isbm = isbm;
 		this.amount = amount;
+		this.amountActual = amount;
 		this.titel = titel;
 		this.cover = cover;
 		this.pickPeriod = pickPeriod;
@@ -60,6 +64,28 @@ public class Book {
 
 	public List<Author> getAuthors() {
 		return authors;
+	}
+
+	
+	public boolean pickBook() {
+		if (amountActual==0) {
+			return false;
+		}else {
+			amountActual--;
+			return true;
+		}
+	}
+	
+	public void returnBook () {
+		amountActual++;
+	}
+
+	public List<Record> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<Record> records) {
+		this.records = records;
 	}
 	
 	

@@ -1,5 +1,6 @@
 package library.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import library.dto.*;
 import library.entities.*;
-import library.repo.AuthorRepository;
-import library.repo.BookRepository;
+import library.repo.*;
 
 @Service
 public class LibraryOrm implements ILibrary {
@@ -17,30 +17,35 @@ public class LibraryOrm implements ILibrary {
 	BookRepository books;
 	@Autowired
 	AuthorRepository authors;
-
+	@Autowired
+	ReaderRepository readers;
+	@Autowired
+	RecordRepository records;
+	
 	@Override
 	@Transactional
-	public boolean addAuthor(AuthorDto authorDto) {
+	public LibraryReturnCode addAuthor(AuthorDto authorDto) {
 		if (authors.existsById(authorDto.name)) {
-			return false;
+			return LibraryReturnCode.AUTHOR_ALREADY_EXISTS;
 		}
-		authors.save(authorDto.getAuthor());
-		return true;
+		authors.save(new Author(authorDto.name, authorDto.country));
+		return LibraryReturnCode.OK;
 	}
 
 	@Override
 	@Transactional
-	public boolean addBook(BookDto bookDto) {
-		if (!checkAuthors (bookDto.authorsNames)) {
-			return false;
-		}
+	public LibraryReturnCode addBook(BookDto bookDto) {
 		if (books.existsById(bookDto.getIsbm())) {
-			return false;
+			return LibraryReturnCode.BOOK_ALREADY_EXISTS;
 		}
 		
+		if (!checkAuthors (bookDto.authorsNames)) {
+			return LibraryReturnCode.NO_AUTHOR;
+		}
 		Book book = new Book(bookDto.isbm, bookDto.amount, bookDto.titel, bookDto.cover, bookDto.pickPeriod,
 				authors.findAllById(bookDto.authorsNames));
-		return books.save(book) != null;
+		books.save(book);
+		return LibraryReturnCode.OK;
 	}
 
 	private boolean checkAuthors(List <String> authorsNames) {
@@ -50,6 +55,35 @@ public class LibraryOrm implements ILibrary {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	@Transactional
+	public LibraryReturnCode pickBook(PickBookData data) {
+		Book book = books.findById(data.getIsbm()).orElse(null);
+		if (book==null){
+			return LibraryReturnCode.NO_BOOK;
+		}
+		if (!book.pickBook()) {
+			return LibraryReturnCode.ALL_BOOKS_IN_USE;
+		}
+		Reader reader = readers.findById(data.getId()).orElse(null);
+		if (reader==null) {
+			return LibraryReturnCode.NO_READER;
+		}
+		
+		records.save (new Record((LocalDate.parse(data.getPickDate())), book, reader));
+		return LibraryReturnCode.OK;
+	}
+
+	@Override
+	@Transactional
+	public LibraryReturnCode addReader(ReaderDto reader) {
+		if (readers.existsById(reader.getId())) {
+			return LibraryReturnCode.READER_ALREADY_EXISTS;
+		}
+		readers.save(new Reader(reader.getId(), reader.getName(), reader.getYear(), reader.getNumber()));
+		return LibraryReturnCode.OK;
 	}
 
 }

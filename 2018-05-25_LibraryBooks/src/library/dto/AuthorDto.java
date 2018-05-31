@@ -1,7 +1,5 @@
 package library.dto;
 
-import library.entities.Author;
-
 public class AuthorDto {
 	public String name;
 	public String country;
@@ -25,9 +23,6 @@ public class AuthorDto {
 		return "AuthorDto [name=" + name + ", country=" + country + "]";
 	}
 	
-	public Author getAuthor () {
-		return new Author (name, country);
-	}
 	public void setName(String name) {
 		this.name = name;
 	}
