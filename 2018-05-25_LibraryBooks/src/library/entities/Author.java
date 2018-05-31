@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import library.dto.AuthorDto;
+
 @Table(name = "authors")
 @Entity
 public class Author {
@@ -26,6 +28,10 @@ public class Author {
 		this.country = country;
 	}
 
+	public Author(AuthorDto authorDto) {
+		name = authorDto.name;
+		country = authorDto.country;
+	}
 	public List<Book> getBooks() {
 		return books;
 	}
@@ -40,6 +46,9 @@ public class Author {
 
 	public String getCountry() {
 		return country;
+	}
+	public AuthorDto getAuthor() {
+		return new AuthorDto(name, country);
 	}
 
 

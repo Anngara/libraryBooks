@@ -22,14 +22,14 @@ public class LibraryOrm implements ILibrary {
 	ReaderRepository readers;
 	@Autowired
 	RecordRepository records;
-	
+
 	@Override
 	@Transactional
 	public LibraryReturnCode addAuthor(AuthorDto authorDto) {
 		if (authors.existsById(authorDto.name)) {
 			return LibraryReturnCode.AUTHOR_ALREADY_EXISTS;
 		}
-		authors.save(new Author(authorDto.name, authorDto.country));
+		authors.save(new Author(authorDto));
 		return LibraryReturnCode.OK;
 	}
 
@@ -39,8 +39,8 @@ public class LibraryOrm implements ILibrary {
 		if (books.existsById(bookDto.getIsbm())) {
 			return LibraryReturnCode.BOOK_ALREADY_EXISTS;
 		}
-		
-		if (!checkAuthors (bookDto.authorsNames)) {
+
+		if (!checkAuthors(bookDto.authorsNames)) {
 			return LibraryReturnCode.NO_AUTHOR;
 		}
 		Book book = new Book(bookDto.isbm, bookDto.amount, bookDto.titel, bookDto.cover, bookDto.pickPeriod,
@@ -49,8 +49,8 @@ public class LibraryOrm implements ILibrary {
 		return LibraryReturnCode.OK;
 	}
 
-	private boolean checkAuthors(List <String> authorsNames) {
-		for (String name: authorsNames) {
+	private boolean checkAuthors(List<String> authorsNames) {
+		for (String name : authorsNames) {
 			if (!authors.existsById(name)) {
 				return false;
 			}
@@ -62,21 +62,25 @@ public class LibraryOrm implements ILibrary {
 	@Transactional
 	public LibraryReturnCode pickBook(PickBookData data) {
 		Book book = books.findById(data.getIsbm()).orElse(null);
-		if (book==null){
+		if (book == null) {
 			return LibraryReturnCode.NO_BOOK;
 		}
-		if (!book.pickBook()) {
-			return LibraryReturnCode.ALL_BOOKS_IN_USE;
-		}
+
 		Reader reader = readers.findById(data.getId()).orElse(null);
-		if (reader==null) {
+		if (reader == null) {
 			return LibraryReturnCode.NO_READER;
 		}
+
 		try {
-		LocalDate date = LocalDate.parse(data.getPickDate());
-		records.save (new Record(date, book, reader));
-		return LibraryReturnCode.OK;
-		}catch (DateTimeParseException e) {
+			LocalDate date = LocalDate.parse(data.getPickDate());
+			
+			if (!book.pickBook()) {
+				return LibraryReturnCode.ALL_BOOKS_IN_USE;
+			}
+			
+			records.save(new Record(date, book, reader));
+			return LibraryReturnCode.OK;
+		} catch (DateTimeParseException e) {
 			return LibraryReturnCode.WRONG_DATE_FORMAT;
 		}
 	}
@@ -89,6 +93,11 @@ public class LibraryOrm implements ILibrary {
 		}
 		readers.save(new Reader(reader.getId(), reader.getName(), reader.getYear(), reader.getNumber()));
 		return LibraryReturnCode.OK;
+	}
+
+	@Override
+	public AuthorDto getAuthor(String name) {
+		return authors.findById(name).orElse(null).getAuthor();
 	}
 
 }

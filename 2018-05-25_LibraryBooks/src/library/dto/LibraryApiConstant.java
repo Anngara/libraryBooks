@@ -6,5 +6,6 @@ public interface LibraryApiConstant {
 	String ADD_AUTHOR = "author/add";
 	String ADD_READER = "reader/add";
 	String PICK_BOOK = "book/pick";
+	String GET_AUTHOR = "author/get";
 
 }

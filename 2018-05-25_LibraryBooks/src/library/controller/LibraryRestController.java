@@ -37,6 +37,11 @@ public class LibraryRestController {
 	LibraryReturnCode pickBook(@RequestBody PickBookData data) {
 		return library.pickBook(data);
 	}
+	
+	@GetMapping(value = LibraryApiConstant.GET_AUTHOR)
+	AuthorDto getAuthor (@RequestBody String name) {
+		return library.getAuthor(name);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryRestController.class, args);

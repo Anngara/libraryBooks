@@ -10,4 +10,6 @@ public interface ILibrary {
 	LibraryReturnCode pickBook(PickBookData data);
 
 	LibraryReturnCode addReader(ReaderDto reader);
+	
+	AuthorDto getAuthor (String name);
 }
