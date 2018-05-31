@@ -1,6 +1,7 @@
 package library.dao;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +72,13 @@ public class LibraryOrm implements ILibrary {
 		if (reader==null) {
 			return LibraryReturnCode.NO_READER;
 		}
-		
-		records.save (new Record((LocalDate.parse(data.getPickDate())), book, reader));
+		try {
+		LocalDate date = LocalDate.parse(data.getPickDate());
+		records.save (new Record(date, book, reader));
 		return LibraryReturnCode.OK;
+		}catch (DateTimeParseException e) {
+			return LibraryReturnCode.WRONG_DATE_FORMAT;
+		}
 	}
 
 	@Override
