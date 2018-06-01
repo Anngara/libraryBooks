@@ -96,6 +96,7 @@ public class LibraryOrm implements ILibrary {
 	}
 
 	@Override
+	@Transactional
 	public AuthorDto getAuthor(String name) {
 		return authors.findById(name).orElse(null).getAuthor();
 	}
