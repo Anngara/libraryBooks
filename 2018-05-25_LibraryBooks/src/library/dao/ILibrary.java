@@ -1,5 +1,7 @@
 package library.dao;
 
+import java.util.List;
+
 import library.dto.*;
 
 public interface ILibrary {
@@ -12,4 +14,7 @@ public interface ILibrary {
 	LibraryReturnCode addReader(ReaderDto reader);
 	
 	AuthorDto getAuthor (String name);
+	
+	List <AuthorDto> getAllAuthors ();
+	
 }

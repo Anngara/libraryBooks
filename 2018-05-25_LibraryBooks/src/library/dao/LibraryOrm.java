@@ -3,6 +3,7 @@ package library.dao;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,6 +100,11 @@ public class LibraryOrm implements ILibrary {
 	@Transactional
 	public AuthorDto getAuthor(String name) {
 		return authors.findById(name).orElse(null).getAuthor();
+	}
+
+	@Override
+	public List<AuthorDto> getAllAuthors() {
+		return authors.findAll().stream().map(x->x.getAuthor()).collect(Collectors.toList());
 	}
 
 }
