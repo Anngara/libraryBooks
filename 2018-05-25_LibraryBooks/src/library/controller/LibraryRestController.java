@@ -1,5 +1,7 @@
 package library.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,8 +41,13 @@ public class LibraryRestController {
 	}
 	
 	@GetMapping(value = LibraryApiConstant.GET_AUTHOR)
-	AuthorDto getAuthor (@RequestBody String name) {
+	AuthorDto getAuthor (String name) {
 		return library.getAuthor(name);
+	}
+	
+	@GetMapping (value = LibraryApiConstant.GET_ALL_AUTHORS)
+	List <AuthorDto> getAllAuthors (){
+		return library.getAllAuthors();
 	}
 
 	public static void main(String[] args) {
