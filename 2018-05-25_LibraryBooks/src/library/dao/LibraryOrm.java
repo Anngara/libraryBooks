@@ -37,15 +37,14 @@ public class LibraryOrm implements ILibrary {
 	@Override
 	@Transactional
 	public LibraryReturnCode addBook(BookDto bookDto) {
-		if (books.existsById(bookDto.getIsbm())) {
+		if (books.existsById(bookDto.getIsbn())) {
 			return LibraryReturnCode.BOOK_ALREADY_EXISTS;
 		}
 
 		if (!checkAuthors(bookDto.authorsNames)) {
 			return LibraryReturnCode.NO_AUTHOR;
 		}
-		Book book = new Book(bookDto.isbm, bookDto.amount, bookDto.titel, bookDto.cover, bookDto.pickPeriod,
-				authors.findAllById(bookDto.authorsNames));
+		Book book = new Book(bookDto, authors.findAllById(bookDto.authorsNames));
 		books.save(book);
 		return LibraryReturnCode.OK;
 	}
@@ -62,12 +61,12 @@ public class LibraryOrm implements ILibrary {
 	@Override
 	@Transactional
 	public LibraryReturnCode pickBook(PickBookData data) {
-		Book book = books.findById(data.getIsbm()).orElse(null);
+		Book book = books.findById(data.getIsbn()).get();
 		if (book == null) {
 			return LibraryReturnCode.NO_BOOK;
 		}
 
-		Reader reader = readers.findById(data.getId()).orElse(null);
+		Reader reader = readers.findById(data.getReadeId()).get();
 		if (reader == null) {
 			return LibraryReturnCode.NO_READER;
 		}
@@ -89,22 +88,53 @@ public class LibraryOrm implements ILibrary {
 	@Override
 	@Transactional
 	public LibraryReturnCode addReader(ReaderDto reader) {
-		if (readers.existsById(reader.getId())) {
+		if (readers.existsById(reader.getReaderId())) {
 			return LibraryReturnCode.READER_ALREADY_EXISTS;
 		}
-		readers.save(new Reader(reader.getId(), reader.getName(), reader.getYear(), reader.getNumber()));
+		readers.save(new Reader(reader));
 		return LibraryReturnCode.OK;
 	}
 
 	@Override
 	@Transactional
 	public AuthorDto getAuthor(String name) {
-		return authors.findById(name).orElse(null).getAuthor();
+		return authors.findById(name).orElse(null).getAuthorDto();
 	}
 
 	@Override
+	@Transactional
 	public List<AuthorDto> getAllAuthors() {
-		return authors.findAll().stream().map(x->x.getAuthor()).collect(Collectors.toList());
+		return authors.findAll().stream().map(x->x.getAuthorDto()).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public LibraryReturnCode returnBook(ReturnBookData data) {
+		Record record = records.findByBookIsbnAndReaderReaderIdAndReturnDateNull(data.getIsbn(), data.getReaderId());
+		if (record == null)
+			return LibraryReturnCode.NO_RECORD_FOR_RETURN;
+		record.setReturnDate(data.getReturnDate());
+		return LibraryReturnCode.OK;
+	}
+
+	@Override
+	@Transactional
+	public List<ReaderDto> getReadersDelayingBooks() {
+		List<Record> rec = records.findByReturnDateNull();
+		return rec.stream().filter(Record::checkDelay).map(x->x.getReader().getReaderDto()).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public List<AuthorDto> getBookAuthors(long isbn) {
+		return books.findById(isbn).get().getAuthors().stream().map(Author::getAuthorDto).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public List<BookDto> getAuthorBooks(String authorName) {
+		return authors.findById(authorName).get().getBooks().stream()
+				.map(Book::getBookDto).collect(Collectors.toList());
 	}
 
 }

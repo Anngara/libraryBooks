@@ -1,14 +1,18 @@
 package library.entities;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import javax.persistence.*;
+
+import library.dto.BookDto;
 import library.dto.Cover;
 
 @Table(name = "books")
 @Entity
 public class Book {
 	@Id
-	long isbm;
+	long isbn;
 	int amount;
 	int amountActual;
 	String titel;
@@ -21,13 +25,23 @@ public class Book {
 	List <Record> records;
 	
 	
-	public Book(long isbm, int amount, String titel, Cover cover, int pickPeriod, List<Author> authors) {
-		this.isbm = isbm;
+	public Book(long isbn, int amount, String titel, Cover cover, int pickPeriod, List<Author> authors) {
+		this.isbn = isbn;
 		this.amount = amount;
 		this.amountActual = amount;
 		this.titel = titel;
 		this.cover = cover;
 		this.pickPeriod = pickPeriod;
+		this.authors = authors;
+	}
+	
+	public Book (BookDto bookDto, List <Author> authors) {
+		this.isbn = bookDto.isbn;
+		this.amount = bookDto.amount;
+		this.amountActual = bookDto.amount;
+		this.titel = bookDto.titel;
+		this.cover = bookDto.cover;
+		this.pickPeriod = bookDto.pickPeriod;
 		this.authors = authors;
 	}
 
@@ -50,8 +64,8 @@ public class Book {
 		this.pickPeriod = pickPeriod;
 	}
 
-	public long getIsbm() {
-		return isbm;
+	public long getIsbn() {
+		return isbn;
 	}
 
 	public String getTitel() {
@@ -88,5 +102,9 @@ public class Book {
 		this.records = records;
 	}
 	
+	public BookDto getBookDto () {
+		return new BookDto(isbn, amount, titel, cover, pickPeriod, 
+				authors.stream().map(Author::getName).collect(Collectors.toList()));
+	}
 	
 }

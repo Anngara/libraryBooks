@@ -3,7 +3,7 @@ package library.dto;
 import java.util.List;
 
 public class BookDto {
-	public long isbm;
+	public long isbn;
 	public int amount;
 	public String titel;
 	public Cover cover;
@@ -12,13 +12,23 @@ public class BookDto {
 	
 	public BookDto() {
 	}
+	
+	public BookDto(long isbn, int amount, String titel, Cover cover, int pickPeriod, List<String> authorsNames) {
+		this.isbn = isbn;
+		this.amount = amount;
+		this.titel = titel;
+		this.cover = cover;
+		this.pickPeriod = pickPeriod;
+		this.authorsNames = authorsNames;
+	}
+
 	@Override
 	public String toString() {
-		return "BookDto [isbm=" + isbm + ", amount=" + amount + ", titel=" + titel + ", cover=" + cover
+		return "BookDto [isbn=" + isbn + ", amount=" + amount + ", titel=" + titel + ", cover=" + cover
 				+ ", pickPeriod=" + pickPeriod + ", authors=" + authorsNames + "]";
 	}
-	public long getIsbm() {
-		return isbm;
+	public long getIsbn() {
+		return isbn;
 	}
 	public int getAmount() {
 		return amount;

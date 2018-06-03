@@ -49,6 +49,27 @@ public class LibraryRestController {
 	List <AuthorDto> getAllAuthors (){
 		return library.getAllAuthors();
 	}
+	
+	@PostMapping (value = LibraryApiConstant.RETURN_BOOK)
+	LibraryReturnCode  returnBook (@RequestBody ReturnBookData data) {
+		return library.returnBook(data);
+	}
+	
+	@GetMapping (value = LibraryApiConstant.GET_READERS_DELAYING_BOOK)
+	List <ReaderDto>  getReadersDelayingBooks(){
+		return library.getReadersDelayingBooks();
+	}
+	
+	@GetMapping (value = LibraryApiConstant.GET_BOOK_AUTHORS)
+	List <AuthorDto>  getBookAuthors(long isbn){
+		return library.getBookAuthors(isbn);
+	}
+	
+	@GetMapping (value = LibraryApiConstant.GET_AUTHOR_BOOKS)
+	List <BookDto>  getAuthorBooks (String  authorName){ 
+		return library.getAuthorBooks(authorName);
+	}
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryRestController.class, args);

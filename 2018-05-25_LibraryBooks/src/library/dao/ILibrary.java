@@ -17,4 +17,12 @@ public interface ILibrary {
 	
 	List <AuthorDto> getAllAuthors ();
 	
+	LibraryReturnCode  returnBook (ReturnBookData data);
+	
+	List <ReaderDto>  getReadersDelayingBooks();
+	
+	List <AuthorDto>  getBookAuthors(long isbn);
+	
+	List <BookDto>  getAuthorBooks (String  authorName);  
+	
 }

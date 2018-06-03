@@ -3,11 +3,13 @@ package library.entities;
 import java.util.List;
 
 import javax.persistence.*;
+
+import library.dto.ReaderDto;
 @Table(name = "readers")
 @Entity
 public class Reader {
 	@Id
-	int id;
+	int readerId;
 	String name;
 	int year;
 	int number;
@@ -15,11 +17,15 @@ public class Reader {
 	List<Record> records;
 
 
-	public Reader() {
+	public Reader(ReaderDto reader) {
+		readerId = reader.getReaderId();
+		name = reader.getName();
+		year = reader.getYear();
+		number = reader.getNumber();
 	}
 
-	public Reader(int id, String name, int year, int number) {
-		this.id = id;
+	public Reader(int readerId, String name, int year, int number) {
+		this.readerId = readerId;
 		this.name = name;
 		this.year = year;
 		this.number = number;
@@ -33,8 +39,8 @@ public class Reader {
 		this.records = records;
 	}
 
-	public int getId() {
-		return id;
+	public int getReaderId() {
+		return readerId;
 	}
 
 	public String getName() {
@@ -47,6 +53,10 @@ public class Reader {
 
 	public int getNumber() {
 		return number;
+	}
+	
+	public ReaderDto getReaderDto () {
+		return new ReaderDto(readerId, name, year,number);
 	}
 
 }

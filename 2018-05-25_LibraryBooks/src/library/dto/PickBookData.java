@@ -1,31 +1,35 @@
 package library.dto;
 
 public class PickBookData {
-	int id;
-	long isbm;
+	int readeId;
+	long isbn;
 	String pickDate;
 	
 	public PickBookData() {
 	}
 	
 
-	public PickBookData(int id, long isbm, String pickDate) {
-		this.id = id;
-		this.isbm = isbm;
+	public PickBookData(int readeId, long isbn, String pickDate) {
+		this.readeId = readeId;
+		this.isbn = isbn;
 		this.pickDate = pickDate;
 	}
 
 
-	public int getId() {
-		return id;
-	}
-
-	public long getIsbm() {
-		return isbm;
-	}
+	
 
 	public String getPickDate() {
 		return pickDate;
+	}
+
+
+	public int getReadeId() {
+		return readeId;
+	}
+
+
+	public long getIsbn() {
+		return isbn;
 	}
 	
 	

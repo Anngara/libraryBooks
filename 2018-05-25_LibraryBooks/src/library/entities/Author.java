@@ -47,7 +47,7 @@ public class Author {
 	public String getCountry() {
 		return country;
 	}
-	public AuthorDto getAuthor() {
+	public AuthorDto getAuthorDto() {
 		return new AuthorDto(name, country);
 	}
 

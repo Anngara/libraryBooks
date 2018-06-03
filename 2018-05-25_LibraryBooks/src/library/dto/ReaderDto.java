@@ -1,6 +1,6 @@
 package library.dto;
 public class ReaderDto {
-	int id;
+	int readerId;
 	String name;
 	int year;
 	int number;
@@ -8,8 +8,8 @@ public class ReaderDto {
 	public ReaderDto() {
 	}
 
-	public ReaderDto(int id, String name, int year, int number) {
-		this.id = id;
+	public ReaderDto(int readerId, String name, int year, int number) {
+		this.readerId = readerId;
 		this.name = name;
 		this.year = year;
 		this.number = number;
@@ -23,8 +23,8 @@ public class ReaderDto {
 		this.number = number;
 	}
 
-	public int getId() {
-		return id;
+	public int getReaderId() {
+		return readerId;
 	}
 
 	public String getName() {
