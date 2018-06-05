@@ -13,8 +13,8 @@ public class Reader {
 	String name;
 	int year;
 	int number;
-	@OneToMany (mappedBy = "reader")
-	List<Record> records;
+	@OneToMany 
+	List <Record> records;
 
 
 	public Reader(ReaderDto reader) {
@@ -29,6 +29,10 @@ public class Reader {
 		this.name = name;
 		this.year = year;
 		this.number = number;
+	}
+	
+	public Reader() {
+	
 	}
 
 	public List<Record> getRecords() {

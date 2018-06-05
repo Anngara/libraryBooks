@@ -1,16 +1,15 @@
 package library.dto;
 
-import java.time.LocalDate;
 
 public class ReturnBookData {
 	int readerId;
 	long isbn;
-	LocalDate  returnDate;
+	String  returnDate;
 	
 	public ReturnBookData() {
 	}
 
-	public ReturnBookData(int readerId, long isbn, LocalDate returnDate) {
+	public ReturnBookData(int readerId, long isbn, String returnDate) {
 		this.readerId = readerId;
 		this.isbn = isbn;
 		this.returnDate = returnDate;
@@ -24,7 +23,7 @@ public class ReturnBookData {
 		return isbn;
 	}
 
-	public LocalDate getReturnDate() {
+	public String getReturnDate() {
 		return returnDate;
 	}
 	

@@ -15,11 +15,8 @@ public class PickBookData {
 		this.pickDate = pickDate;
 	}
 
-
-	
-
-	public String getPickDate() {
-		return pickDate;
+	public long getIsbn() {
+		return isbn;
 	}
 
 
@@ -28,8 +25,8 @@ public class PickBookData {
 	}
 
 
-	public long getIsbn() {
-		return isbn;
+	public String getPickDate() {
+		return pickDate;
 	}
 	
 	

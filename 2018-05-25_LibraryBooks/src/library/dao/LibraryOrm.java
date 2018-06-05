@@ -113,15 +113,21 @@ public class LibraryOrm implements ILibrary {
 		Record record = records.findByBookIsbnAndReaderReaderIdAndReturnDateNull(data.getIsbn(), data.getReaderId());
 		if (record == null)
 			return LibraryReturnCode.NO_RECORD_FOR_RETURN;
-		record.setReturnDate(data.getReturnDate());
+		try {
+			LocalDate date = LocalDate.parse(data.getReturnDate());
+			record.setReturnDate(date);
+			} catch (DateTimeParseException e) {
+				return LibraryReturnCode.WRONG_DATE_FORMAT;
+			}
+		record.getBook().returnBook();
 		return LibraryReturnCode.OK;
 	}
 
 	@Override
 	@Transactional
 	public List<ReaderDto> getReadersDelayingBooks() {
-		List<Record> rec = records.findByReturnDateNull();
-		return rec.stream().filter(Record::checkDelay).map(x->x.getReader().getReaderDto()).collect(Collectors.toList());
+		return records.findByReturnDateNull()
+				.filter(Record::checkDelay).map(x->x.getReader().getReaderDto()).distinct().collect(Collectors.toList());
 	}
 
 	@Override

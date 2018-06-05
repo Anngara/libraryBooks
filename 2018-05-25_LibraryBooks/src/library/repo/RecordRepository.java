@@ -1,6 +1,7 @@
 package library.repo;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,6 +11,6 @@ public interface RecordRepository extends JpaRepository <Record,Integer> {
 
 	Record findByBookIsbnAndReaderReaderIdAndReturnDateNull(long isbn, int readerId);
 
-	List<Record> findByReturnDateNull();
+	Stream <Record> findByReturnDateNull();
 
 }
